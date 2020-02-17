@@ -30,5 +30,7 @@ pkgs.stdenv.mkDerivation {
   shellHook = ''
     export NIX_CFLAGS_LINK=-lncurses
     export IDF_PATH=./esp-idf
+    export IDF_TOOLS_PATH=./esp-idf/tools
+    export PATH="$IDF_TOOLS_PATH:$PATH"
   '';
 }

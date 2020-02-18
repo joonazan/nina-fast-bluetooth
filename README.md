@@ -10,3 +10,11 @@ processing power the ARM core has to offer.
 One could make the existing implementation asynchronous. Instead, this project
 aims to do as much of the bluetooth logic on the ESP32 as possible. The main
 processor shall only tell the coprocessor when some characteristic should change.
+
+## Building on Linux
+
+- Install [Nix](https://nixos.org/nix/).
+- Run `nix-shell` in this directory.
+- run `make flash`
+
+You can open a serial monitor with `make monitor`.

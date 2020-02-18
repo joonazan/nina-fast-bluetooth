@@ -16,22 +16,12 @@ let
     };
     in pkgs.python2.override{inherit packageOverrides; self= python2;};
 
-  esp-idf = pkgs.stdenvNoCC.mkDerivation {
-    name = "esp-idf-source";
-    version = "3.3.1";
-
-    buildCommand = ''git clone -b v3.3.1 --recursive https://github.com/espressif/esp-idf.git $out'';
-    passAsFile = [ "buildCommand" ];
-
-    nativeBuildInputs = [ pkgs.git ];
-    GIT_SSL_CAINFO = "${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt";
-  };
 in
 
 pkgs.stdenv.mkDerivation {
   name = "esp-idf-env";
 
-  src = ./src;
+  src = ./.;
 
   dontConfigure = true;
   dontInstall = true;
@@ -40,24 +30,13 @@ pkgs.stdenv.mkDerivation {
     gawk gperf gettext automake bison flex texinfo help2man libtool autoconf ncurses5 cmake glibcLocales
     (python2.withPackages (ppkgs: with ppkgs; [ pyserial future cryptography setuptools pyelftools pyparsing click ]))
     (pkgs.callPackage ./esp32-toolchain.nix {})
-    git which
   ];
-  GIT_SSL_CAINFO = "${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt";
-
-  IDF = esp-idf;
-
-  buildPhase = ''
-    cp -r $IDF esp-idf
-    chmod -R +w esp-idf
-    export IDF_PATH=$(pwd)/esp-idf
-    export NIX_CFLAGS_LINK=-lncurses
-    make
-
-    mkdir $out
-  '';
 
   shellHook = ''
-    export IDF_TOOLS_PATH=$src/tools
+    test -e esp-idf || git clone -b v3.3.1 --recursive https://github.com/espressif/esp-idf.git
+    export NIX_CFLAGS_LINK=-lncurses
+    export IDF_PATH=$(pwd)/esp-idf
+    export IDF_TOOLS_PATH=$IDF_PATH/tools
     export PATH="$IDF_TOOLS_PATH:$PATH"
   '';
 }

@@ -15,22 +15,35 @@ let
         });
     };
     in pkgs.python2.override{inherit packageOverrides; self= python2;};
+
+  esp-idf = pkgs.fetchFromGitHub {
+    owner = "espressif";
+    repo = "esp-idf";
+    rev = "refs/tags/v3.3.1";
+    fetchSubmodules = true;
+    sha256 = "166b022y87ghav6lp2ky97j8w25ld45vl6kg2k6xvrmzv9lgknm9";
+  };
 in
 
 pkgs.stdenv.mkDerivation {
-  name = "esp-idf-env"; 
-  src = ./esp-idf;
-  dontBuild = true;
+  name = "esp-idf-env";
+
+  srcs = [ ./src esp-idf ];
+  sourceRoot = "src";
+
   dontConfigure = true;
+  dontBuild = true;
   buildInputs = with pkgs; [
     gawk gperf gettext automake bison flex texinfo help2man libtool autoconf ncurses5 cmake glibcLocales
     (python2.withPackages (ppkgs: with ppkgs; [ pyserial future cryptography setuptools pyelftools pyparsing click ]))
     (pkgs.callPackage ./esp32-toolchain.nix {})
   ];
+
+  IDF_PATH=esp-idf;
+
   shellHook = ''
     export NIX_CFLAGS_LINK=-lncurses
-    export IDF_PATH=./esp-idf
-    export IDF_TOOLS_PATH=./esp-idf/tools
+    export IDF_TOOLS_PATH=$src/tools
     export PATH="$IDF_TOOLS_PATH:$PATH"
   '';
 }

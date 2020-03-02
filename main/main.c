@@ -25,15 +25,11 @@
 #include "nimble/nimble_port_freertos.h"
 #include "host/ble_hs.h"
 #include "host/util/util.h"
-#include "console/console.h"
 #include "services/gap/ble_svc_gap.h"
 #include "bleprph.h"
 
-static const char *tag = "NimBLE_BLE_PRPH";
 static int bleprph_gap_event(struct ble_gap_event *event, void *arg);
 static uint8_t own_addr_type;
-
-void ble_store_config_init(void);
 
 /**
  * Enables advertising with the following parameters:
@@ -220,7 +216,7 @@ bleprph_on_sync(void)
 
 void bleprph_host_task(void *param)
 {
-    ESP_LOGI(tag, "BLE Host Task Started");
+  ESP_LOGI("fast_BLE", "BLE Host Task Started");
     /* This function will return only when nimble_port_stop() is executed */
     nimble_port_run();
 
@@ -246,11 +242,6 @@ app_main(void)
     /* Initialize the NimBLE host configuration. */
     ble_hs_cfg.reset_cb = bleprph_on_reset;
     ble_hs_cfg.sync_cb = bleprph_on_sync;
-    ble_hs_cfg.gatts_register_cb = gatt_svr_register_cb;
-    ble_hs_cfg.store_status_cb = ble_store_util_status_rr;
-
-    ble_hs_cfg.sm_io_cap = BLE_SM_IO_CAP_NO_IO;
-    ble_hs_cfg.sm_sc = 0;
 
     rc = gatt_svr_init();
     assert(rc == 0);
@@ -258,9 +249,6 @@ app_main(void)
     /* Set the default device name. */
     rc = ble_svc_gap_device_name_set("nimble-bleprph");
     assert(rc == 0);
-
-    /* XXX Need to have template for store */
-    ble_store_config_init();
 
     nimble_port_freertos_init(bleprph_host_task);
 

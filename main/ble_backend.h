@@ -1,10 +1,5 @@
 #pragma once
-#include "host/ble_uuid.h"
-
-typedef struct {
-  ble_uuid_t uuid;
-  uint16_t length;
-} Characteristic;
+#include "protocol.h"
 
 typedef void write_callback_fn(size_t, uint8_t*);
 

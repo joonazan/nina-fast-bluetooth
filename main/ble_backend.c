@@ -55,7 +55,7 @@ void BleBackend_init(const char* name,
   for (size_t i = 0; i < n_outputs; i++) {
     characteristics[i] = (struct ble_gatt_chr_def)
       {
-       .uuid = &outputs[i].uuid,
+       .uuid = &outputs[i].uuid.u,
        .access_cb = chr_read_cb,
        .flags = BLE_GATT_CHR_F_READ | BLE_GATT_CHR_F_NOTIFY,
        .val_handle = &bb.output_chars[i].handle,
@@ -71,7 +71,7 @@ void BleBackend_init(const char* name,
   for (size_t i = 0; i < n_inputs; i++) {
     characteristics[n_outputs + i] = (struct ble_gatt_chr_def)
       {
-       .uuid = &inputs[i].uuid,
+       .uuid = &inputs[i].uuid.u,
        .access_cb = chr_write_cb,
        .flags = BLE_GATT_CHR_F_WRITE,
        .arg = (void*)i,

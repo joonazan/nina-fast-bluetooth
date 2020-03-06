@@ -73,7 +73,7 @@ void BleBackend_init(const char* name,
       {
        .uuid = &inputs[i].uuid,
        .access_cb = chr_write_cb,
-       .flags = BLE_GATT_CHR_F_READ | BLE_GATT_CHR_F_WRITE,
+       .flags = BLE_GATT_CHR_F_WRITE,
        .arg = (void*)i,
       };
 

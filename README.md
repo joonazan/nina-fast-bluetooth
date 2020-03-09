@@ -11,10 +11,22 @@ One could make the existing implementation asynchronous. Instead, this project
 aims to do as much of the bluetooth logic on the ESP32 as possible. The main
 processor shall only tell the coprocessor when some characteristic should change.
 
-## Building on Linux
+This is an Arduino library, but to use it, you need to first flash the NINA
+coprocessor with my software, as most of the bluetooth code runs on the NINA.
 
-- Install [Nix](https://nixos.org/nix/).
-- Run `nix-shell` in this directory.
-- run `make flash`
+## Flashing on Linux
 
-You can open a serial monitor with `make monitor`.
+- Upload SerialNINAPassthrough onto your board
+- Install [Nix](https://nixos.org/nix/)
+- Navigate to extras/nina-src
+- Run `nix-shell`
+- Run `make flash`
+
+Now code using the library should work on your board. If you later decide to
+use the stock Wifi or bluetooth libraries, you need to flash the stock firmware
+via the WiFiNINA Firmware Updater.
+
+## Developing the library
+
+You can open a serial monitor into the NINA with `make monitor`. It even shows
+stack traces!

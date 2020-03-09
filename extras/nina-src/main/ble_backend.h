@@ -1,5 +1,5 @@
 #pragma once
-#include "protocol.h"
+#include "../../../src/protocol/protocol.h"
 
 typedef void write_callback_fn(size_t, uint8_t*);
 

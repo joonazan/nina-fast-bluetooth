@@ -1,7 +1,7 @@
 #pragma once
 #include "ble_uuid.h"
 
-static const int BAUDRATE = 115200;
+static const int BAUDRATE = 1843200;
 
 // Setup
 

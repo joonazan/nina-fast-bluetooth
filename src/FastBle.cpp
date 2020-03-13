@@ -1,9 +1,13 @@
 #include "FastBLE.h"
 
-uint16_t output_count = 0;
-uint16_t input_count = 0;
+BLEClass BLE;
 
-BLE::BLE() {
+void BLEClass::init_if_not_initialized() {
+  if (_initialized) {
+    return;
+  }
+  _initialized = true;
+
   // reset Nina
   pinMode(NINA_RESETN, OUTPUT);
   digitalWrite(NINA_RESETN, HIGH);
@@ -15,10 +19,12 @@ BLE::BLE() {
   while(!Serial2);
 }
 
-void BLE::start(ble_uuid_any_t svc_id, IInput** inputs) {
+void BLEClass::start(ble_uuid_any_t svc_id, BLETypes::IInput** inputs) {
+  init_if_not_initialized();
+
   _inputs = inputs;
 
-  for (uint16_t i = 0; i < input_count; i++) {
+  for (uint16_t i = 0; i < _input_count; i++) {
     inputs[i]->setup();
   }
 
@@ -30,7 +36,7 @@ void BLE::start(ble_uuid_any_t svc_id, IInput** inputs) {
   Serial2.write((uint8_t*)&msg, sizeof(SetupMessage));
 }
 
-void BLE::poll() {
+void BLEClass::poll() {
   if (Serial2.available() >= 2) {
     uint16_t input_no;
     Serial2.readBytes((uint8_t*)&input_no, 2);

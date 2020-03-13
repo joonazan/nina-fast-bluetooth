@@ -3,6 +3,8 @@
 #include "protocol/protocol.h"
 #include "Arduino.h"
 
+#define UUID_128(bytes...) (ble_uuid_any_t){ .u128 = { u: {type: BLE_UUID_TYPE_128}, value: { bytes } } }
+
 extern uint16_t output_count;
 extern uint16_t input_count;
 
@@ -12,6 +14,8 @@ public:
   class Output {
     uint16_t _n;
   public:
+    Output() {}
+
     Output(ble_uuid_any_t id) {
       _n = output_count++;
 
@@ -26,7 +30,7 @@ public:
 
     void write(T obj) {
       Serial2.write((uint8_t*)&_n, 2);
-      Serial2.write(&obj, sizeof(T));
+      Serial2.write((uint8_t*)&obj, sizeof(T));
     }
   };
 
@@ -53,7 +57,7 @@ public:
 
     virtual void receive() {
       T x;
-      Serial2.readBytes(&x, sizeof(T));
+      Serial2.readBytes((uint8_t*)&x, sizeof(T));
       _cb(x);
     }
   public:

@@ -12,6 +12,7 @@ BLE::BLE() {
   delay(750);
 
   Serial2.begin(BAUDRATE);
+  while(!Serial2);
 }
 
 void BLE::start(ble_uuid_any_t svc_id, IInput** inputs) {
@@ -30,7 +31,9 @@ void BLE::start(ble_uuid_any_t svc_id, IInput** inputs) {
 }
 
 void BLE::poll() {
-  uint16_t input_no;
-  Serial2.readBytes((uint8_t*)&input_no, 2);
-  _inputs[input_no]->receive();
+  if (Serial2.available() >= 2) {
+    uint16_t input_no;
+    Serial2.readBytes((uint8_t*)&input_no, 2);
+    _inputs[input_no]->receive();
+  }
 }

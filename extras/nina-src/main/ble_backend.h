@@ -3,6 +3,6 @@
 
 typedef void write_callback_fn(size_t, uint8_t*);
 
-void BleBackend_init(const char*, const ble_uuid_t*, Characteristic*, size_t, Characteristic*, size_t, write_callback_fn*);
-
-void change_char(size_t, uint8_t*);
+void BleBackend_add_output(const ble_uuid_any_t* uuid, uint16_t length);
+void BleBackend_add_input(const ble_uuid_any_t* uuid, uint16_t length);
+void BleBackend_start(const char*, const ble_uuid_t*);

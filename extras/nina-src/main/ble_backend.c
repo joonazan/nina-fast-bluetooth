@@ -66,9 +66,11 @@ void BleBackend_add_output(const ble_uuid_any_t* uuid, uint16_t length) {
      .access_cb = chr_read_cb,
      .flags = BLE_GATT_CHR_F_READ | BLE_GATT_CHR_F_NOTIFY,
 
-     // This is a relative address that gets offset in BleBackend_start
-     // We cannot take an absolute address into output_infos, as it may get reallocated.
-     .val_handle = (uint16_t*)((uint8_t*)&bb.output_infos[bb.output_count].handle - (uint8_t*)bb.output_infos),
+     // This just indicates that this has an associated output_info.
+     // We cannot point into output_infos, as it may get reallocated.
+     // The pointer is computed in BleBackend_start, as characteristics
+     // are immutable at that point.
+     .val_handle = (uint16_t*) 1,
 
      .arg = (void*)bb.output_count,
     };
@@ -102,10 +104,13 @@ void BleBackend_start(const char* name,
   bb.characteristics = realloc(bb.characteristics, (chr_count + 1) * sizeof(struct ble_gatt_chr_def));
   bb.characteristics[chr_count] = (struct ble_gatt_chr_def) {0};
 
-  // convert relative addresses to absolute ones (see BleBackend_add_output)
-  for (size_t i = 0; i < chr_count; i++) {
-    if (bb.characteristics[i].val_handle != NULL) {
-      bb.characteristics[i].val_handle = (uint16_t*)((uint8_t*)bb.output_infos + (size_t)bb.characteristics[i].val_handle);
+  // compute output_info pointers (see BleBackend_add_output)
+  {
+    size_t count = 0;
+    for (size_t i = 0; i < chr_count; i++) {
+      if (bb.characteristics[i].val_handle != NULL) {
+        bb.characteristics[i].val_handle = &bb.output_infos[count++].handle;
+      }
     }
   }
 

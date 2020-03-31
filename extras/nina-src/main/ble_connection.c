@@ -64,21 +64,6 @@ fast_ble_advertise(void)
     }
 }
 
-/**
- * The nimble host executes this callback when a GAP event occurs.  The
- * application associates a GAP event callback with each connection that forms.
- * fast_ble uses the same callback for all connections.
- *
- * @param event                 The type of event being signalled.
- * @param ctxt                  Various information pertaining to the event.
- * @param arg                   Application-specified argument; unused by
- *                                  fast_ble.
- *
- * @return                      0 if the application successfully handled the
- *                                  event; nonzero on failure.  The semantics
- *                                  of the return code is specific to the
- *                                  particular GAP event being signalled.
- */
 static int
 fast_ble_gap_event(struct ble_gap_event *event, void *arg)
 {
@@ -96,6 +81,7 @@ fast_ble_gap_event(struct ble_gap_event *event, void *arg)
             /* Connection failed; resume advertising. */
             fast_ble_advertise();
         }
+
         return 0;
 
     case BLE_GAP_EVENT_DISCONNECT:

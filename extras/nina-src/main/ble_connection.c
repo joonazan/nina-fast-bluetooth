@@ -82,7 +82,12 @@ fast_ble_gap_event(struct ble_gap_event *event, void *arg)
             fast_ble_advertise();
         }
 
-        return 0;
+        static const struct ble_gap_upd_params update_params =
+          {
+           .itvl_min = 6,
+           .itvl_max = 6,
+          };
+        return ble_gap_update_params(event->connect.conn_handle, &update_params);
 
     case BLE_GAP_EVENT_DISCONNECT:
         MODLOG_DFLT(INFO, "disconnect; reason=%d\n", event->disconnect.reason);

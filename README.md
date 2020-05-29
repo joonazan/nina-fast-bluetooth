@@ -16,7 +16,7 @@ coprocessor with my software, as most of the bluetooth code runs on the NINA.
 
 ## Flashing on Linux
 
-- Upload SerialNINAPassthrough onto your board
+- Upload SerialNINAPassthrough onto your board (found in File -> Examples -> FastBLE)
 - Install [Nix](https://nixos.org/nix/)
 - Navigate to extras/nina-src
 - Run `nix-shell`

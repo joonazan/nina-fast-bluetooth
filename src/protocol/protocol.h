@@ -13,8 +13,12 @@ enum SetupMessageType
   };
 
 // A number of Create Output / Input messages can be sent
+//
 // Then a Start message should be sent with the uuid field set to the
-// UUID that the Service containing the characteristics should have.
+// UUID that the Service containing the characteristics should have and
+// the length field set to the length of the device's name.
+//
+// Then length bytes (the name) should be sent.
 
 typedef struct {
   uint8_t type;

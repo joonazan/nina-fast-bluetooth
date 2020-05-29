@@ -76,7 +76,7 @@ public:
     return { id, cb };
   };
 
-  void start(ble_uuid_any_t, BLETypes::IInput**);
+  void start(ble_uuid_any_t, const char *, BLETypes::IInput**);
   void poll();
 
 private:

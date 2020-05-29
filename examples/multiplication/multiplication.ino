@@ -30,7 +30,7 @@ void loop() {
   // I do initialization in loop because this array must live as long as the program
   BLETypes::IInput* inputs[] = { &in };
 
-  BLE.start(SERVICE_UUID, inputs);
+  BLE.start(SERVICE_UUID, "multiplication service", inputs);
 
   while(true) {
     BLE.poll();

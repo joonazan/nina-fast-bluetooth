@@ -18,7 +18,12 @@ void app_main(void)
     } else if (msg.type == BLE_CREATE_INPUT) {
       BleBackend_add_input(id, msg.length);
     } else if (msg.type == BLE_START) {
-      BleBackend_start("testname", &id->u);
+      const uint16_t namelen = msg.length;
+      char *name = malloc(namelen + 1);
+      read_from_uart(name, namelen);
+      name[namelen] = '\0';
+
+      BleBackend_start(name, &id->u);
       break;
     }
   }

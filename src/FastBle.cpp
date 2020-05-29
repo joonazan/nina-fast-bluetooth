@@ -19,7 +19,7 @@ void BLEClass::init_if_not_initialized() {
   while(!Serial2);
 }
 
-void BLEClass::start(ble_uuid_any_t svc_id, BLETypes::IInput** inputs) {
+void BLEClass::start(ble_uuid_any_t svc_id, const char *name, BLETypes::IInput** inputs) {
   init_if_not_initialized();
 
   _inputs = inputs;
@@ -28,12 +28,17 @@ void BLEClass::start(ble_uuid_any_t svc_id, BLETypes::IInput** inputs) {
     inputs[i]->setup();
   }
 
+  uint16_t name_length = 0;
+  while(name[name_length++] != '\0');
+
   SetupMessage msg
     {
     type: BLE_START,
     uuid: svc_id,
+    length: name_length,
     };
   Serial2.write((uint8_t*)&msg, sizeof(SetupMessage));
+  Serial2.write((uint8_t*)name, name_length);
 }
 
 void BLEClass::poll() {

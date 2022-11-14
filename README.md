@@ -17,9 +17,14 @@ coprocessor with my software, as most of the bluetooth code runs on the NINA.
 ## Flashing on Linux
 
 - Upload SerialNINAPassthrough onto your board (found in File -> Examples -> FastBLE)
-- Install [Nix](https://nixos.org/nix/)
 - Navigate to extras/nina-src
-- Run `nix-shell`
+- Open a shell with ESP-IDF
+
+    - Install [Nix](https://nixos.org/nix/)
+    - run `nix --experimental-features 'nix-command flakes' develop github:mirrexagon/nixpkgs-esp-dev#esp32-idf`
+
+    Alternatively, you can install ESP-IDF manually but I don't recommend it.
+
 - Run `make flash`
 
 Now code using the library should work on your board. If you later decide to
